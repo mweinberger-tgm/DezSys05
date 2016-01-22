@@ -20,6 +20,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \input special/preamble.tex
 
 \let\tempsection\section
@@ -102,12 +103,66 @@ Die folgende Grafik soll den Vorgang verdeutlichen:
 
 \newpage
 
-\section{asdf}
+\section{Ergebnisse}
+
+Mit folgenden Klassen kann diese Übung erfolgreich abgeschlossen werden:
+\begin{itemize}
+	\item KeyPairGenerator
+	\item SecureRandom
+	\item KeyFactory
+	\item X509EncodedKeySpec
+	\item Cipher
+\end{itemize}
+
+Der Ablauf kann mit folgenden Schritten beschrieben werden:
+\begin{itemize}
+	\item Generieren eines asymmetrischen Schlüssels, Public Key
+	\item Abspeichern des Public Keys am LDAP-Server
+	\item Client generiert einen symmetrischen Schlüssel
+	\item Public Key wird vom Client aus dem LDAP-Servereintrag geholt und gespeichert
+	\item Der symmetrische Schlüssel wird mit dem Public Key verschlüsselt
+	\item Dieser Schlüssel wird per Socket zum Service gesendet
+	\item Service entschlüsselt empfangenen Key mithilfe seines Private Keys
+	\item Erstellen einer Nachricht vom Service, verschlüsseln mit symmetrischem Schlüssel
+	\item Client empfängt Nachricht ung entschlüsselt diese wiederum mit dem vorher generierten symmetrischen Schlüssel
+	\item Ausgeben der Nachricht durch den Client
+\end{itemize}
+
+Folgende Klassen wurden erstellt:
+
+\begin{itemize}
+	\item Client
+	\item CommunicationClient
+	\item CommunicationServer
+	\item JavaSecurity
+	\item LDAPConnector
+	\item Service1
+\end{itemize}
+
+Die Grundfunktionalität wurde bereits oben erläutert (Client/Service1). CommunicationClient verbindet sich zu einem Server-Socket, kann Byte-Arrays versenden. CommunicationServer öffnet einen Server-Socket auf dem angegebenen Port, auch hier können Byte-Arrays gesendet werden. Die Sendevorgänge setzen eine vorherige Übermittlung der Arraygröße voraus. Die Byte-/Hex-Transition wurde bestehenden Methoden entnommen. Es ist auch zu beachten, dass alle generierten Schlüssel festgeschriebene Header und Footer haben. Der Ablauf auf Codeebene ist dem Quelltext zu entnehmen.
+
+\subsection{Symmetrische Verschlüsselung, AES}
+Die Klasse KeyGenerator stellt hierfür die geeignete Funktionalität bereit.
+
+\begin{lstlisting}[frame=single,language=bash, caption=Symmetrische Verschlüsselung]
+KeyGenerator keygen = KeyGenerator.getInstance("AES");
+return keygen.generateKey();
+\end{lstlisting}
+
+\subsection{Asymmetrische Verschlüsselung, RSA}
+
+Auch hier gibt es bereits bestehenden Code, und zwar in der Klasse KeyPairGenerator. Man kann die Schlüssellänge festlegen sowie auch die Zufallswerte, die in die Erstellung einfließen.
+
+\begin{lstlisting}[frame=single,language=bash, caption=Symmetrische Verschlüsselung]
+KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+SecureRandom values = SecureRandom.getInstance("SHA1PRNG", "SUN");
+generator.initialize(4096, values);
+return generator.generateKeyPair();
+\end{lstlisting}
 
 \newpage
 
 \bibliographystyle{unsrt}
-\bibliography{references}
 \lstlistoflistings
 \listoffigures
 
