@@ -58,6 +58,10 @@ public class Service1 {
 				Cipher cipher = Cipher.getInstance("AES");
 				cipher.init(Cipher.ENCRYPT_MODE, this.symKey);
 
+				if (message == null) {
+					System.out.println("Nachricht = null! Abbruch");
+					System.exit(1);
+				}
 				byte[] ready = cipher.doFinal((message).getBytes());
 				this.communicationServer.getOut().writeInt(ready.length);
 				this.communicationServer.getOut().write(ready);

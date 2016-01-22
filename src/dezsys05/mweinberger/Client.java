@@ -22,9 +22,9 @@ public class Client {
 
 	public PublicKey holePublicKey() {
 		try {
-			String ldapKey = this.ldap.getDescription();
+			String publ = this.ldap.getDescription();
 
-			byte[] key = hexStringToByteArray(ldapKey);
+			byte[] key = hexStringToByteArray(publ);
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(key);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			return keyFactory.generatePublic(pubKeySpec);
