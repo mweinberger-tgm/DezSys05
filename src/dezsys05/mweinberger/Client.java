@@ -4,6 +4,7 @@ import javax.crypto.*;
 import javax.xml.bind.*;
 import java.security.*;
 import java.security.spec.*;
+import javax.swing.*;
 
 public class Client {
 
@@ -62,7 +63,7 @@ public class Client {
 			Cipher cipher = Cipher.getInstance("AES");
 			cipher.init(Cipher.DECRYPT_MODE, this.symSchl);
 			byte[] ready = cipher.doFinal(this.communicationClient.read());
-			System.out.println("Empfangene entschluesselte Nachricht: " + new String(ready));
+			JOptionPane.showMessageDialog(null, "Empfangene entschluesselte Nachricht: \n" + new String(ready), "DezSys05 Weinb 5BHIT", JOptionPane.PLAIN_MESSAGE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -2,6 +2,7 @@ package dezsys05.mweinberger;
 
 import javax.crypto.*;
 import javax.crypto.spec.*;
+import javax.swing.JOptionPane;
 import javax.xml.bind.*;
 import java.security.*;
 
@@ -29,7 +30,7 @@ public class Service1 {
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 		generator.initialize(1024, random);
 		KeyPair keypair = generator.generateKeyPair();
-		System.out.println("Schluesselpaar wurde ezeugt");
+		System.out.println("Schluesselpaar wurde erzeugt");
 		return keypair;
 	}
 
@@ -54,7 +55,6 @@ public class Service1 {
 	public void schickeVerschlNachricht(String message) {
 		if (this.symKey != null) {
 			try {
-				System.out.println("Verschluesselte Nachricht wird an Server uebermittelt: " + message);
 				Cipher cipher = Cipher.getInstance("AES");
 				cipher.init(Cipher.ENCRYPT_MODE, this.symKey);
 
@@ -65,6 +65,8 @@ public class Service1 {
 				byte[] ready = cipher.doFinal((message).getBytes());
 				this.communicationServer.getOut().writeInt(ready.length);
 				this.communicationServer.getOut().write(ready);
+				
+				JOptionPane.showMessageDialog(null, "Verschluesselte Nachricht: \n" + this.byteArrayToHexString(ready), "DezSys05 Weinb 5BHIT", JOptionPane.PLAIN_MESSAGE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
